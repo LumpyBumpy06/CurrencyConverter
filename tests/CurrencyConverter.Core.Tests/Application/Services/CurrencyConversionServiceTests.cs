@@ -10,7 +10,7 @@ using CurrencyConverter.Core.Domain.Models;
 
 namespace CurrencyConverter.Core.Tests.Application.Services;
 
-public class CurrencyConverterTests
+public class CurrencyConversionServiceTests
 {
     private static readonly Currency Gbp = new("GBP", "British Pound");
     private static readonly Currency Eur = new("EUR", "Euro");
