@@ -79,7 +79,7 @@ public class ExchangeRateTests
         var gbp = new Currency("GBP", "Pound Sterling");
         var eur = new Currency("EUR", "Euro");
         var timestamp = new DateTimeOffset(2026, 11, 1, 12, 0, 0, TimeSpan.FromHours(2));
-        
+
         var exchangeRate = new ExchangeRate(gbp, eur, 1.17m, timestamp);
 
         Assert.Equal(timestamp.ToUniversalTime(), exchangeRate.RetrievedAtUTC);
