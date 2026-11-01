@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-
 namespace CurrencyConverter.Core.Domain.Models;
 
 public sealed record ExchangeRate

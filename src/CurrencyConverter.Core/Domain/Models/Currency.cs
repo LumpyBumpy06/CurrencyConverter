@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace CurrencyConverter.Core.Domain.Models;
 
 public sealed record Currency
@@ -31,5 +27,4 @@ public sealed record Currency
         Name = name.Trim();
     }
     private const int IsoCurrencyCodeLength = 3;
-    private const int MaxSupportedDecimalPlaces = 3;
 }

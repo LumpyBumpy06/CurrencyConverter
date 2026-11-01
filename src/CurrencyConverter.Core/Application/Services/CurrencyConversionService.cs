@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-
 using CurrencyConverter.Core.Application.Exceptions;
 using CurrencyConverter.Core.Application.Interfaces;
 using CurrencyConverter.Core.Domain.Models;
