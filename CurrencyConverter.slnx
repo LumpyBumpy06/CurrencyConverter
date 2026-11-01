@@ -1,3 +1,3 @@
 <Solution>
-  <Project Path="src/CurrencyConverter.Web/CurrencyConverter.csproj" />
+  <Project Path="src/CurrencyConverter.Web/CurrencyConverter.Web.csproj" />
 </Solution>
