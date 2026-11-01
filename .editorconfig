@@ -1,0 +1,67 @@
+
+# Apply these rules from this repository root.
+root = true
+
+# General settings for all files.
+[*]
+charset = utf-8
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# JSON and YAML files use two spaces.
+[*.{json,yml,yaml}]
+indent_size = 2
+
+# XML and .NET project/solution files use two spaces.
+[*.{csproj,props,targets,slnx,xml}]
+indent_size = 2
+
+# C# source files.
+[*.cs]
+
+# Formatting: braces and new lines.
+csharp_new_line_before_open_brace = all
+csharp_new_line_before_else = true
+csharp_new_line_before_catch = true
+csharp_new_line_before_finally = true
+
+# Formatting: indentation.
+csharp_indent_block_contents = true
+csharp_indent_braces = false
+csharp_indent_case_contents = true
+csharp_indent_switch_labels = true
+
+# Formatting: spaces.
+csharp_space_after_cast = false
+csharp_space_after_comma = true
+csharp_space_after_keywords_in_control_flow_statements = true
+csharp_space_around_binary_operators = before_and_after
+csharp_space_before_comma = false
+csharp_space_between_method_call_name_and_opening_parenthesis = false
+
+# C# coding conventions.
+csharp_using_directive_placement = outside_namespace:suggestion
+csharp_style_namespace_declarations = file_scoped:suggestion
+csharp_prefer_braces = true:suggestion
+
+# Organise using directives.
+dotnet_sort_system_directives_first = true
+dotnet_separate_import_directive_groups = true
+
+# Prefer language keywords such as string and int.
+dotnet_style_predefined_type_for_locals_parameters_members = true:suggestion
+dotnet_style_predefined_type_for_member_access = true:suggestion
+
+# Avoid unnecessary "this." qualification.
+dotnet_style_qualification_for_field = false:suggestion
+dotnet_style_qualification_for_property = false:suggestion
+dotnet_style_qualification_for_method = false:suggestion
+dotnet_style_qualification_for_event = false:suggestion
+
+# Prefer explicit accessibility on class members.
+dotnet_style_require_accessibility_modifiers = for_non_interface_members:suggestion
+
+# Prefer readonly fields where possible.
+dotnet_style_readonly_field = true:suggestion

@@ -1,4 +1,7 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+  </Folder>
   <Project Path="src/CurrencyConverter.Core/CurrencyConverter.Core.csproj" Id="a78148cf-e39d-4c80-a546-b6e9f957f7bf" />
   <Project Path="src/CurrencyConverter.Web/CurrencyConverter.Web.csproj" />
   <Project Path="tests/CurrencyConverter.Core.Tests/CurrencyConverter.Core.Tests.csproj" Id="a8b16a3c-3b45-4bdf-b261-0dcfe1bcf321" />
