@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -12,6 +12,6 @@ public sealed class ExchangeRateNotFoundException : Exception
             $"No exchange rate is available from " +
             $"{baseCurrency.Code} to {quoteCurrency.Code}."
         )
-    {}
+    { }
 }
 
