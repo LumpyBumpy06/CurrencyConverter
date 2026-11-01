@@ -1,0 +1,71 @@
+
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+# Restrict permissions to the minimum required.
+permissions:
+  contents: read
+
+# Cancel outdated workflow runs on the same branch.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    name: Build and test
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      # Check out repository.
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      # Install .NET 10 SDK.
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.0.x'
+
+      # Display SDK information.
+      - name: Display .NET information
+        run: dotnet --info
+
+      # Restore NuGet dependencies.
+      - name: Restore dependencies
+        run: dotnet restore CurrencyConverter.slnx
+
+      # Verify code formatting.
+      - name: Verify code formatting
+        run: dotnet format CurrencyConverter.slnx --verify-no-changes --no-restore
+
+      # Build solution in Release configuration.
+      - name: Build solution
+        run: dotnet build CurrencyConverter.slnx --no-restore --configuration Release
+
+      # Execute all tests.
+      - name: Run tests
+        run: >
+          dotnet test CurrencyConverter.slnx
+          --no-build
+          --no-restore
+          --configuration Release
+          --logger "trx;LogFilePrefix=test-results"
+          --results-directory TestResults
+
+      # Upload test reports, even when tests fail.
+      - name: Upload test results
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: test-results
+          path: TestResults/
+          if-no-files-found: ignore
+          retention-days: 7
