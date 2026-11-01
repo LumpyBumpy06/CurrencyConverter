@@ -6,7 +6,7 @@ using CurrencyConverter.Core.Domain.Models;
 
 using Xunit;
 
-namespace CurrencyConverter.Core.Tests;
+namespace CurrencyConverter.Core.Tests.Domain.Models;
 
 public class ExchangeRateTests
 {
