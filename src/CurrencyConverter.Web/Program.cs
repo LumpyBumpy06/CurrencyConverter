@@ -1,4 +1,4 @@
-using CurrencyConverter.Components;
+using CurrencyConverter.Web.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
