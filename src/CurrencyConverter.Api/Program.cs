@@ -1,6 +1,7 @@
 using CurrencyConverter.Api.Infrastructure.Frankfurter;
 using CurrencyConverter.Core.Application.Interfaces;
 using CurrencyConverter.Core.Application.Services;
+using CurrencyConverter.Api.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,10 +29,10 @@ Action<HttpClient> configureFrankfurterClient = client =>
     client.BaseAddress = frankfurterBaseUri;
 };
 
-// Exchange-rate adapter
+// ExchangeRate adapter
 builder.Services.AddHttpClient<IExchangeRateSource, FrankfurterExchangeRateSource>(configureFrankfurterClient);
 
-// Currency catalogue adapter
+// CurrenciesAvailable adapter
 builder.Services.AddHttpClient<ICurrenciesAvailableSource, FrankfurterCurrenciesAvailableSource>(configureFrankfurterClient);
 
 // Application services
@@ -46,6 +47,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Register our API endpoints
+app.MapCurrenciesEndpoints();
+app.MapConversionsEndpoints();
 
 // Health endpoint
 app.MapGet("/health", () => Results.Ok(new
