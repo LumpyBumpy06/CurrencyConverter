@@ -7,6 +7,10 @@ public sealed record ExchangeRate
     public decimal Rate { get; }
     public DateTimeOffset RetrievedAtUTC { get; }
 
+    /// <summary>
+    /// An Exchange Rate
+    /// </summary>
+    /// <param name="retrievedAtUTC">The date we retrieve the exchange, importantly NOT the date it was valid.</param>
     public ExchangeRate(
         Currency baseCurrency,
         Currency quoteCurrency,
