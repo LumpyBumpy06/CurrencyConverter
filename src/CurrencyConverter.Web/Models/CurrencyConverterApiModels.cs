@@ -1,4 +1,4 @@
-﻿namespace CurrencyConverter.Web.Models;
+namespace CurrencyConverter.Web.Models;
 
 public sealed record CurrencyOption(string Code, string Name);
 

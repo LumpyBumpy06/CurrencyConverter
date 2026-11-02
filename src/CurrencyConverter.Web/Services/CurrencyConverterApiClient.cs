@@ -1,5 +1,6 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Net.Http.Json;
+
 using CurrencyConverter.Web.Models;
 
 namespace CurrencyConverter.Web.Services;
