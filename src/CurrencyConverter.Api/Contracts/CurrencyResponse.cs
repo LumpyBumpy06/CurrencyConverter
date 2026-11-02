@@ -1,4 +1,4 @@
-﻿namespace CurrencyConverter.Api.Contracts;
+namespace CurrencyConverter.Api.Contracts;
 // Don't want to expose internals (our Core's Currency Model), instead define something we are giving to the users.
 
 /// <summary>

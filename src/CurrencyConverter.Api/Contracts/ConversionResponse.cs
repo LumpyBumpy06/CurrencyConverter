@@ -1,4 +1,4 @@
-﻿namespace CurrencyConverter.Api.Contracts;
+namespace CurrencyConverter.Api.Contracts;
 
 /// <summary>
 /// Represents the result of a currency conversion returned by the API.

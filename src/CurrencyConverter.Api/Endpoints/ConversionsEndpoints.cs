@@ -1,4 +1,5 @@
-﻿using System.Net;
+using System.Net;
+
 using CurrencyConverter.Api.Contracts;
 using CurrencyConverter.Core.Application.Exceptions;
 using CurrencyConverter.Core.Application.Services;

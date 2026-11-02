@@ -1,4 +1,4 @@
-﻿using CurrencyConverter.Api.Contracts;
+using CurrencyConverter.Api.Contracts;
 using CurrencyConverter.Core.Application.Interfaces;
 
 namespace CurrencyConverter.Api.Endpoints;

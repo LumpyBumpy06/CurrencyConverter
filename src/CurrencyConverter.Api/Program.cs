@@ -1,7 +1,7 @@
+using CurrencyConverter.Api.Endpoints;
 using CurrencyConverter.Api.Infrastructure.Frankfurter;
 using CurrencyConverter.Core.Application.Interfaces;
 using CurrencyConverter.Core.Application.Services;
-using CurrencyConverter.Api.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
 
