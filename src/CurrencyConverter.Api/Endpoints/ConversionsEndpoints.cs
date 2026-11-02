@@ -70,7 +70,7 @@ public static class ConversionsEndpoints
                 statusCode: StatusCodes.Status400BadRequest);
         }
         catch (HttpRequestException ex) when (
-            ex.StatusCode is HttpStatusCode.BadRequest or HttpStatusCode.NotFound)
+            ex.StatusCode is HttpStatusCode.BadRequest or HttpStatusCode.NotFound or HttpStatusCode.UnprocessableEntity)
         {
             // The provider rejected the requested currency pair.
             return Results.Problem(
