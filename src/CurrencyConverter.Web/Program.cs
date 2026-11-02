@@ -1,10 +1,21 @@
 using CurrencyConverter.Web.Components;
+using CurrencyConverter.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+// Registers our API client with dependency injection
+builder.Services.AddHttpClient<CurrencyConverterApiClient>(client =>
+{
+    var baseUrl = builder.Configuration["CurrencyApi:BaseUrl"]
+        ?? throw new InvalidOperationException(
+            "The Currency API base URL is not configured.");
+
+    client.BaseAddress = new Uri(baseUrl);
+});
 
 var app = builder.Build();
 

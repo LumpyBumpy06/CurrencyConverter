@@ -1,7 +1,171 @@
 ﻿@page "/"
+@rendermode InteractiveServer
+@using CurrencyConverter.Web.Models
+@using CurrencyConverter.Web.Services
+@inject CurrencyConverterApiClient ApiClient
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Currency Converter</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h1 class="h3 text-center mb-4">Currency Converter</h1>
 
-Welcome to your new app.
+                    @if (isLoadingCurrencies)
+                    {
+                        <p class="text-center">Loading currencies...</p>
+                    }
+                    else if (currencies.Count > 0)
+                    {
+                        <form @onsubmit="ConvertAsync" @onsubmit:preventDefault>
+
+                            <div class="mb-3">
+                                <label for="amount" class="form-label">Amount</label>
+                                <input id="amount"
+                                       type="number"
+                                       class="form-control"
+                                       @bind="amount"
+                                       min="0.01"
+                                       step="any"
+                                       required />
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="sourceCurrency" class="form-label">
+                                    From
+                                </label>
+                                <select id="sourceCurrency"
+                                        class="form-select"
+                                        @bind="sourceCurrency">
+                                    @foreach (var currency in currencies)
+                                    {
+                                        <option value="@currency.Code">
+                                            @currency.Code - @currency.Name
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="destinationCurrency" class="form-label">
+                                    To
+                                </label>
+                                <select id="destinationCurrency"
+                                        class="form-select"
+                                        @bind="destinationCurrency">
+                                    @foreach (var currency in currencies)
+                                    {
+                                        <option value="@currency.Code">
+                                            @currency.Code - @currency.Name
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+
+                            <button type="submit"
+                                    class="btn btn-primary w-100"
+                                    disabled="@isConverting">
+                                @(isConverting ? "Converting..." : "Convert")
+                            </button>
+                        </form>
+                    }
+
+                    @if (!string.IsNullOrWhiteSpace(errorMessage))
+                    {
+                        <div class="alert alert-danger mt-3">
+                            @errorMessage
+                        </div>
+                    }
+
+                    @if (conversionResult is not null)
+                    {
+                        <div class="alert alert-success mt-4">
+                            <h2 class="h5">Conversion Result</h2>
+
+                            <p class="mb-1">
+                                @conversionResult.OriginalAmount
+                                @conversionResult.SourceCurrency
+                                =
+                                <strong>
+                                    @conversionResult.ConvertedAmount.ToString("N2")
+                                    @conversionResult.DestinationCurrency
+                                </strong>
+                            </p>
+
+                            <p class="small mb-1">
+                                Exchange rate:
+                                1 @conversionResult.SourceCurrency =
+                                @conversionResult.ExchangeRate
+                                @conversionResult.DestinationCurrency
+                            </p>
+
+                            <p class="small mb-0">
+                                Rate retrieved:
+                                @conversionResult.RateRetrievedAtUTC.ToLocalTime().ToString("g")
+                            </p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<CurrencyOption> currencies = [];
+
+    private decimal amount = 100m;
+    private string sourceCurrency = "GBP";
+    private string destinationCurrency = "EUR";
+
+    private bool isLoadingCurrencies = true;
+    private bool isConverting = false;
+
+    private string? errorMessage;
+    private ConversionResponse? conversionResult;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            currencies = await ApiClient.GetCurrenciesAsync();
+        }
+        catch (HttpRequestException)
+        {
+            errorMessage = "Could not load currencies. Please check that the API is running.";
+        }
+        finally
+        {
+            isLoadingCurrencies = false;
+        }
+    }
+
+    private async Task ConvertAsync()
+    {
+        errorMessage = null;
+        conversionResult = null;
+
+        if (amount <= 0)
+        {
+            errorMessage = "Please enter an amount greater than zero.";
+            return;
+        }
+
+        isConverting = true;
+
+        try
+        {
+            conversionResult = await ApiClient.ConvertAsync(amount, sourceCurrency, destinationCurrency);
+        }
+        catch (HttpRequestException)
+        {
+            errorMessage = "Conversion failed. Please check your currency selections and try again.";
+        }
+        finally
+        {
+            isConverting = false;
+        }
+    }
+}
