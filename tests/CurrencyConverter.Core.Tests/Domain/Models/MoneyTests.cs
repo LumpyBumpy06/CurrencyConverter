@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 using CurrencyConverter.Core.Domain.Models;
-
-using Xunit;
 
 namespace CurrencyConverter.Core.Tests.Domain.Models;
 
