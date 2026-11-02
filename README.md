@@ -70,3 +70,8 @@ AI generated suggestions were reviewed and adapted during development. I made th
 - Add a test proving the exchange rate source is not called for same currency conversions.
 - Add tests for rounding, precision and cancellation.
 - Consider API integration tests to verify the endpoints and HTTP responses together.
+
+### CI/CD Pipeline
+
+- Remove redundant runs of the workflow when merging into other branches
+- Add deployment to Azure
