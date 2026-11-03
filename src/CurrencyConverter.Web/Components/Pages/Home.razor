@@ -1,7 +1,11 @@
-﻿@page "/"
+@page "/"
 @rendermode InteractiveServer
+
+@using System.Globalization
+@using System.Net
 @using CurrencyConverter.Web.Models
 @using CurrencyConverter.Web.Services
+
 @inject CurrencyConverterApiClient ApiClient
 
 <PageTitle>Currency Converter</PageTitle>
@@ -24,11 +28,12 @@
                             <div class="mb-3">
                                 <label for="amount" class="form-label">Amount</label>
                                 <input id="amount"
-                                       type="number"
+                                       type="text"
+                                       inputmode="decimal"
                                        class="form-control"
-                                       @bind="amount"
-                                       min="0.01"
-                                       step="any"
+                                       @bind="amountInput"
+                                       @bind:event="oninput"
+                                       @onblur="FormatAmountInput"
                                        required />
                             </div>
 
@@ -85,11 +90,11 @@
                             <h2 class="h5">Conversion Result</h2>
 
                             <p class="mb-1">
-                                @conversionResult.OriginalAmount
+                                @FormatAmount(conversionResult.OriginalAmount)
                                 @conversionResult.SourceCurrency
                                 =
                                 <strong>
-                                    @conversionResult.ConvertedAmount.ToString("N2")
+                                    @FormatAmount(conversionResult.ConvertedAmount)
                                     @conversionResult.DestinationCurrency
                                 </strong>
                             </p>
@@ -97,7 +102,7 @@
                             <p class="small mb-1">
                                 Exchange rate:
                                 1 @conversionResult.SourceCurrency =
-                                @conversionResult.ExchangeRate
+                                @FormatAmount(conversionResult.ExchangeRate)
                                 @conversionResult.DestinationCurrency
                             </p>
 
@@ -116,7 +121,7 @@
 @code {
     private List<CurrencyOption> currencies = [];
 
-    private decimal amount = 100m;
+    private string amountInput = "100";
     private string sourceCurrency = "GBP";
     private string destinationCurrency = "EUR";
 
@@ -147,17 +152,33 @@
         errorMessage = null;
         conversionResult = null;
 
-        if (amount <= 0)
+        if (!TryParseAmountInput(out var parsedAmount))
+        {
+            errorMessage = "Please enter a valid amount within the supported range.";
+            return;
+        }
+
+        if (parsedAmount <= 0m)
         {
             errorMessage = "Please enter an amount greater than zero.";
             return;
         }
 
+        amountInput = FormatAmount(parsedAmount);
+
         isConverting = true;
 
         try
         {
-            conversionResult = await ApiClient.ConvertAsync(amount, sourceCurrency, destinationCurrency);
+            conversionResult = await ApiClient.ConvertAsync(
+                parsedAmount,
+                sourceCurrency,
+                destinationCurrency);
+        }
+        catch (HttpRequestException ex) when (
+            ex.StatusCode == HttpStatusCode.UnprocessableEntity)
+        {
+            errorMessage = "The converted amount is too large. Please enter a smaller amount.";
         }
         catch (HttpRequestException)
         {
@@ -167,5 +188,23 @@
         {
             isConverting = false;
         }
+    }
+
+    private void FormatAmountInput()
+    {
+        if (TryParseAmountInput(out var amount))
+        {
+            amountInput = FormatAmount(amount);
+        }
+    }
+
+    private bool TryParseAmountInput(out decimal amount)
+    {
+        return decimal.TryParse(amountInput, NumberStyles.Number, CultureInfo.CurrentCulture, out amount);
+    }
+
+    private static string FormatAmount(decimal value)
+    {
+        return value.ToString("#,##0.############################", CultureInfo.CurrentCulture);
     }
 }
