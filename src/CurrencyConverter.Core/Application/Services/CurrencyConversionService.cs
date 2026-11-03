@@ -33,7 +33,16 @@ public sealed class CurrencyConversionService
             throw new ExchangeRateNotFoundException(originalMoney.Currency, targetCurrency);
         }
 
-        decimal convertedAmount = originalMoney.Amount * exchangeRate.Rate;
+        decimal convertedAmount;
+
+        try
+        {
+            convertedAmount = originalMoney.Amount * exchangeRate.Rate;
+        }
+        catch (OverflowException ex)
+        {
+            throw new ConversionAmountOutOfRangeException(originalMoney.Currency, targetCurrency, ex);
+        }
 
         var convertedMoney = new Money(convertedAmount, targetCurrency);
 
