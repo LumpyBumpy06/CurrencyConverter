@@ -20,13 +20,23 @@ public static class CurrenciesEndpoints
     // This was setup in Program.cs
     private static async Task<IResult> CurrenciesAsync(ICurrenciesAvailableSource currenciesSource)
     {
-        var currencies = await currenciesSource.GetCurrenciesAsync();
+        try
+        {
+            var currencies = await currenciesSource.GetCurrenciesAsync();
 
-        var response = currencies
-            .OrderBy(currency => currency.Code, StringComparer.Ordinal)
-            .Select(currency => new CurrencyResponse(currency.Code, currency.Name))
-            .ToArray();
+            var response = currencies
+                .OrderBy(currency => currency.Code, StringComparer.Ordinal)
+                .Select(currency => new CurrencyResponse(currency.Code, currency.Name))
+                .ToArray();
 
-        return Results.Ok(response);
+            return Results.Ok(response);
+        }
+        catch (HttpRequestException)
+        {
+            return Results.Problem(
+                title: "Currency provider error",
+                detail: "The currency provider could not retrieve the currency list.",
+                statusCode: StatusCodes.Status502BadGateway);
+        }
     }
 }
