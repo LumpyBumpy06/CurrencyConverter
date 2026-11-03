@@ -44,6 +44,23 @@ public class CurrencyConversionServiceTests
         Assert.Equal(100m, result.ConvertedMoney.Amount);
     }
 
+    [Fact]
+    public async Task ConvertAsync_WhenConvertedAmountExceedsDecimalRange_ThrowsConversionAmountOutOfRangeException()
+    {
+        var exchangeRate = new ExchangeRate(Gbp, Eur, 2m, DateTimeOffset.UtcNow);
+
+        var source = new FakeExchangeRateSource(exchangeRate);
+        var converter = new CurrencyConversionService(source);
+
+        var originalMoney = new Money(decimal.MaxValue, Gbp);
+
+        var act = () => converter.ConvertAsync(originalMoney, Eur);
+
+        var exception = await Assert.ThrowsAsync<ConversionAmountOutOfRangeException>(act);
+
+        Assert.IsType<OverflowException>(exception.InnerException);
+    }
+
     [Theory]
     [InlineData(0)]
     [InlineData(-10)]

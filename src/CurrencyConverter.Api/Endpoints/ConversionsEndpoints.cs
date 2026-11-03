@@ -17,6 +17,7 @@ public static class ConversionsEndpoints
             .Produces<ConversionResponse>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status422UnprocessableEntity)
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
         return endpoints;
@@ -60,6 +61,14 @@ public static class ConversionsEndpoints
                 title: "Exchange rate not found",
                 detail: "No exchange rate was found for the requested currency pair.",
                 statusCode: StatusCodes.Status404NotFound);
+        }
+        catch (ConversionAmountOutOfRangeException)
+        {
+            // The conversion result exceeds the supported decimal range.
+            return Results.Problem(
+                title: "Conversion amount too large",
+                detail: "The converted amount exceeds the maximum value supported by this application.",
+                statusCode: StatusCodes.Status422UnprocessableEntity);
         }
         catch (ArgumentException)
         {
